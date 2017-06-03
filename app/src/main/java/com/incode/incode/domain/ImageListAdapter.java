@@ -17,6 +17,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import com.incode.incode.R;
+import com.incode.incode.presentation.presenter.IPresenter.ImageViewerContract;
 
 /**
  * Created by kuri on 6/2/17.
@@ -25,7 +26,8 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
 
     private final ImageRequester mImageRequester;
     private List<Image> mImages;
-    private Context mContext;
+    private final Context mContext;
+    private final ImageViewerContract.UserActionListener mPresenter;
 
     private Callback requestCallback = new Callback<List<Image>>() {
         @Override
@@ -40,9 +42,10 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         }
     };
 
-    public ImageListAdapter(Context context){
+    public ImageListAdapter(Context context, ImageViewerContract.UserActionListener presenter){
         mImageRequester = ImageRequester.getInstance();
         mContext = context;
+        this.mPresenter = presenter;
         getImages();
     }
 
@@ -58,8 +61,15 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Glide.with(mContext).load(mImages.get(position).getPhotoURL()).into(holder.image);
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+        final Image image = mImages.get(position);
+        Glide.with(mContext).load(image.getPhotoURL()).into(holder.image);
+        holder.image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.onImageClicked(image);
+            }
+        });
     }
 
     @Override
