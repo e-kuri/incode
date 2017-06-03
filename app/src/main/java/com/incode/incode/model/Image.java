@@ -9,7 +9,7 @@ import java.util.Date;
 public class Image {
     private String title;
     private Date publishedAt;
-    private String photoURL;
+    private String photo;
     private int id;
     private String comment;
 
@@ -30,11 +30,11 @@ public class Image {
     }
 
     public String getPhotoURL() {
-        return photoURL;
+        return photo;
     }
 
     public void setPhotoURL(String photoURL) {
-        this.photoURL = photoURL;
+        this.photo = photoURL;
     }
 
     public int getId() {

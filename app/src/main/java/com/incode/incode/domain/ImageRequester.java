@@ -28,7 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ImageRequester{
 
-    private static final String BASE_URL = "https://photomaton.herokuapp.com/api/photo";
+    private static final String BASE_URL = "https://photomaton.herokuapp.com/api/";
     private ImageAPI mImageAPI;
     private static ImageRequester mImageRequester;
 
@@ -36,7 +36,7 @@ public class ImageRequester{
         start();
     };
 
-    public ImageRequester getImageRequester(){
+    public static ImageRequester getInstance(){
         if(mImageRequester == null){
             synchronized (ImageRequester.class){
                 if(mImageRequester == null){
@@ -61,70 +61,4 @@ public class ImageRequester{
         Call<List<Image>> call = mImageAPI.getImages();
         call.enqueue(callback);
     }
-
-
-
-
-    /*
-    private static ImageRequester mImageRequester;
-    private RequestQueue mRequestQueue;
-    private static Context mContext;
-    private static final String url = "https://photomaton.herokuapp.com/api/photo";
-    private final Response.Listener mResponseListener;
-    private final Response.ErrorListener mErrorListener;
-
-    private ImageRequester(Context context, final ImagesRequestCallback callback){
-        mContext = context;
-
-        mResponseListener = new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                callback.onSuccess();
-            }
-        };
-
-        mErrorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                callback.onError();
-            }
-        };
-    }
-
-
-    public static ImageRequester getmImageRequester(Context context, ImagesRequestCallback callback){
-        if(mImageRequester == null){
-            synchronized (ImageRequester.class){
-                if(mImageRequester == null){
-                    mImageRequester = new ImageRequester(context, callback);
-                }
-            }
-        }
-
-        return mImageRequester;
-    }
-
-    public <T> void addToRequestQueue(Request<T> request, String tag){
-        request.setTag(tag);
-        getRequestQueue().add(request);
-    }
-
-    public void cancelPendingRequests(Object tag){
-        if(mRequestQueue != null){
-            mRequestQueue.cancelAll(tag);
-        }
-    }
-
-    private RequestQueue getRequestQueue(){
-        if(mRequestQueue == null){
-            mRequestQueue = Volley.newRequestQueue(mContext.getApplicationContext());
-        }
-        return mRequestQueue;
-    }
-
-    public void requestAllImages(final ImagesRequestCallback callback){
-
-        JsonArrayRequest request = new JsonArrayRequest(url, mResponseListener, mErrorListener);
-    }
-    */
 }
