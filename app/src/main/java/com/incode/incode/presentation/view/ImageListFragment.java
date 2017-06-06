@@ -1,8 +1,9 @@
 package com.incode.incode.presentation.view;
 
-
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,15 +22,34 @@ public class ImageListFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+    private FloatingActionButton mPictureButton;
+    private FragmentActionHandler mActionHandler;
 
-    public static ImageListFragment newInstance(RecyclerView.Adapter adapter) {
+    private View.OnClickListener mPictureButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mActionHandler.takePicture();
+        }
+    };
+
+    public static ImageListFragment newInstance(RecyclerView.Adapter adapter, FragmentActionHandler actionHandler) {
         ImageListFragment fragment = new ImageListFragment();
         fragment.setAdapter(adapter);
+        fragment.mActionHandler = actionHandler;
         return fragment;
     }
 
-    private void setAdapter(RecyclerView.Adapter adapter){
+    public void setActionHandler(FragmentActionHandler mActionHandler){
+        this.mActionHandler = mActionHandler;
+    }
+
+    public void setAdapter(RecyclerView.Adapter adapter){
         this.mAdapter = adapter;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -43,6 +63,15 @@ public class ImageListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView = (RecyclerView)view.findViewById(R.id.images_container);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(this.mAdapter);
+        mPictureButton = (FloatingActionButton)view.findViewById(R.id.picture_button);
+        mPictureButton.setOnClickListener(mPictureButtonListener);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
 }

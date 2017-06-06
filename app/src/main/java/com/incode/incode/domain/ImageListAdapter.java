@@ -1,6 +1,7 @@
 package com.incode.incode.domain;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,9 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.incode.incode.model.Image;
 
+import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -32,7 +34,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     private Callback requestCallback = new Callback<List<Image>>() {
         @Override
         public void onResponse(Call<List<Image>> call, Response<List<Image>> response) {
-            mImages = response.body();
+            mImages.addAll(response.body());
             notifyDataSetChanged();
         }
 
@@ -46,6 +48,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         mImageRequester = ImageRequester.getInstance();
         mContext = context;
         this.mPresenter = presenter;
+        mImages = new LinkedList<>();
         getImages();
     }
 
@@ -63,7 +66,14 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final Image image = mImages.get(position);
-        Glide.with(mContext).load(image.getPhotoURL()).into(holder.image);
+        Log.d("ImageListAdapter", "onBindViewHolder: " + image.getTitle() + " : " + image.getPhotoURI());
+        if(image.isLocal()){
+            GlideApp.with(mContext).load(image.getPhotoURI())
+                    .into(holder.image).onLoadFailed(ContextCompat.getDrawable(mContext, R.drawable.chrome_broken));
+        }else{
+            GlideApp.with(mContext).load(new GlideUrlForRandomImages(image.getPhotoURI().toString(), image.getId())).into(holder.image)
+                    .onLoadFailed(ContextCompat.getDrawable(mContext, R.drawable.chrome_broken));
+        }
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,5 +95,15 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.list_image);
         }
+    }
+
+    public void addImage(Image image){
+        mImages.add(0, image);
+        notifyDataSetChanged();
+    }
+
+    public void addImages(List<Image> images){
+        mImages.addAll(0, images);
+        notifyDataSetChanged();
     }
 }
