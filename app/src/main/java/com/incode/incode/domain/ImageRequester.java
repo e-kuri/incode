@@ -1,19 +1,8 @@
 package com.incode.incode.domain;
 
-import android.content.Context;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.incode.incode.model.Image;
-
-import org.json.JSONArray;
 
 import java.util.List;
 

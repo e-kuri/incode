@@ -17,7 +17,7 @@ public class IncodeApplication extends Application {
     }
 
     /**
-     * Clear cache every time we start the app
+     * Clear cache every time we start the app.
      */
     private void clearCache(){
         File cacheDirectory = new File(getApplicationContext().getExternalFilesDir(null), "Cache");

@@ -36,7 +36,6 @@ public class ImageDetailsFragment extends Fragment {
     private ImageView mImageView;
     private TextView mDetailsTextView;
     private static final String IMAGE_KEY = "image_key";
-    private Bitmap mBitmap;
 
     public static ImageDetailsFragment getInstance(Image image){
         ImageDetailsFragment fragment = new ImageDetailsFragment();
