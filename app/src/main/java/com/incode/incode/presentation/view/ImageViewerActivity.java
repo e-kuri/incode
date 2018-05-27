@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 
 import com.incode.incode.R;
+import com.incode.incode.domain.ImageRequester;
 import com.incode.incode.model.Image;
 import com.incode.incode.presentation.presenter.IPresenter.ImageViewerContract;
 import com.incode.incode.presentation.presenter.ImageViewPresenter;
@@ -33,7 +34,7 @@ public class ImageViewerActivity extends AppCompatActivity implements ImageViewe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_viewer);
-        mPresenter = new ImageViewPresenter(this);
+        mPresenter = new ImageViewPresenter(this, ImageRequester.getInstance());
         mPresenter.showImagesList();
         mPresenter.addAllImagesInStorage(getContext());
 

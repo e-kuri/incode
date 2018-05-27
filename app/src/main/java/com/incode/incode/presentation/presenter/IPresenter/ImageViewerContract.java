@@ -8,6 +8,7 @@ import com.incode.incode.model.Image;
 
 import java.io.File;
 import java.io.IOException;
+import retrofit2.Callback;
 
 /**
  * Created by kuri on 6/3/17.
@@ -27,7 +28,8 @@ public interface ImageViewerContract {
         void addAllImagesInStorage(Context context);
         void addPicture(Uri uri);
         File createImageFile(File folder) throws IOException;
-        public RecyclerView.Adapter getAdapter();
+        RecyclerView.Adapter getAdapter();
+        void getServerImages(Callback callback);
     }
 
 

@@ -28,7 +28,7 @@ public class ImageRequester{
     public static ImageRequester getInstance(){
         if(mImageRequester == null){
             synchronized (ImageRequester.class){
-                if(mImageRequester == null){
+                    if(mImageRequester == null){
                     mImageRequester = new ImageRequester();
                 }
             }

@@ -11,7 +11,6 @@ import android.widget.ImageView;
 
 import com.incode.incode.model.Image;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,7 +25,6 @@ import com.incode.incode.presentation.presenter.IPresenter.ImageViewerContract;
  */
 public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.ViewHolder> {
 
-    private final ImageRequester mImageRequester;
     private List<Image> mImages;
     private final Context mContext;
     private final ImageViewerContract.UserActionListener mPresenter;
@@ -34,8 +32,10 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     private Callback requestCallback = new Callback<List<Image>>() {
         @Override
         public void onResponse(Call<List<Image>> call, Response<List<Image>> response) {
-            mImages.addAll(response.body());
-            notifyDataSetChanged();
+            if(response != null && response.body() != null){
+                mImages.addAll(response.body());
+                notifyDataSetChanged();
+            }
         }
 
         @Override
@@ -44,16 +44,15 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
         }
     };
 
+    public void getImages(){
+        mPresenter.getServerImages(requestCallback);
+    }
+
     public ImageListAdapter(Context context, ImageViewerContract.UserActionListener presenter){
-        mImageRequester = ImageRequester.getInstance();
         mContext = context;
         this.mPresenter = presenter;
         mImages = new LinkedList<>();
         getImages();
-    }
-
-    public void getImages(){
-        mImageRequester.requestImages(requestCallback);
     }
 
     @Override

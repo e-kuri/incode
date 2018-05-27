@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 
 
 import com.incode.incode.domain.ImageListAdapter;
+import com.incode.incode.domain.ImageRequester;
 import com.incode.incode.model.Image;
 import com.incode.incode.presentation.presenter.IPresenter.ImageViewerContract;
 
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import retrofit2.Callback;
+
 /**
  * Created by kuri on 6/3/17.
  */
@@ -25,9 +28,11 @@ public class ImageViewPresenter implements ImageViewerContract.UserActionListene
     private final ImageViewerContract.View view;
     private ImageListAdapter mAdapter;
     private static final SimpleDateFormat imgDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+    private ImageRequester mImageRequester;
 
-    public ImageViewPresenter(ImageViewerContract.View view){
+    public ImageViewPresenter(ImageViewerContract.View view, ImageRequester imageRequester){
         this.view = view;
+        this.mImageRequester = imageRequester;
     }
 
     @Override
@@ -40,7 +45,7 @@ public class ImageViewPresenter implements ImageViewerContract.UserActionListene
         view.showListFragment(getAdapter());
     }
 
-    public RecyclerView.Adapter getAdapter(){
+    public ImageListAdapter getAdapter(){
         if(mAdapter == null){
             mAdapter = new ImageListAdapter(view.getContext(), this);
         }
@@ -48,10 +53,15 @@ public class ImageViewPresenter implements ImageViewerContract.UserActionListene
     }
 
     @Override
+    public void getServerImages(Callback callback) {
+        mImageRequester.requestImages(callback);
+    }
+
+    @Override
     public void addPicture(Uri uri) {
         Image image = new Image(imgDateFormat.format(new Date()), uri.toString(), uri, "Picture taken by user");
         image.setLocal(true);
-        mAdapter.addImage(image);
+        getAdapter().addImage(image);
     }
 
 
@@ -81,7 +91,7 @@ public class ImageViewPresenter implements ImageViewerContract.UserActionListene
                 images.add(image);
             }
         }
-        mAdapter.addImages(images);
+        getAdapter().addImages(images);
     }
 
 }
